@@ -1,0 +1,277 @@
+:root {
+  --glass: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --blur: blur(20px);
+  /* This variable controls the horizontal "spread" */
+  --shift-x: 30vw;
+}
+html{ /*remove this block when integrating in your html body*/
+  background: #000;
+}
+.carousel-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #000;
+  perspective: 2000px; /* Increased for better depth on wide screens */
+  overflow: hidden;
+  color: white;
+  width: 100%;
+}
+
+.carousel-stage {
+  position: relative;
+  width: 100vw; /* Occupy full width to allow cards to spread */
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+.carousel-card {
+  position: absolute;
+  /* Dynamic width: wider on desktop, narrower on mobile */
+  width: clamp(280px, 25vw, 400px);
+  height: clamp(380px, 60vh, 500px);
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 32px;
+  transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+/* --- 3D TRANSFORM STATES --- */
+
+.carousel-card.active {
+  transform: translate3d(0, 0, 250px) rotateY(0deg);
+  z-index: 10;
+  opacity: 1;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8);
+}
+
+.carousel-card.left {
+  transform: translate3d(calc(var(--shift-x) * -1), 0, -150px) rotateY(35deg)
+    scale(0.85);
+  z-index: 5;
+  opacity: 0.5;
+}
+
+.carousel-card.right {
+  transform: translate3d(var(--shift-x), 0, -150px) rotateY(-35deg) scale(0.85);
+  z-index: 5;
+  opacity: 0.5;
+}
+
+.carousel-card.far-left {
+  transform: translate3d(calc(var(--shift-x) * -1.8), 0, -500px) rotateY(45deg)
+    scale(0.6);
+  z-index: 1;
+  opacity: 0.2;
+}
+
+.carousel-card.far-right {
+  transform: translate3d(calc(var(--shift-x) * 1.8), 0, -500px) rotateY(-45deg)
+    scale(0.6);
+  z-index: 1;
+  opacity: 0.2;
+}
+
+.carousel-card.hidden {
+  transform: translate3d(0, 0, -1000px) scale(0.1);
+  opacity: 0;
+}
+
+/* Card Inner Styling */
+.card-image {
+  height: 60%;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  padding: 15px;
+}
+
+.expand-badge {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.card-content {
+  padding: 20px;
+  flex-grow: 1;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.card-footer{
+  font-size: 12px;
+}
+.card-content p {
+  font-size: 12px;
+  font-style:italic;
+  margin-top:4px;
+  margin-bottom:4px;
+  margin-left:0;
+  margin-right:0;
+}
+.card-header h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.tag-pill {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Controls */
+.carousel-controls {
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 1px solid var(--glass-border);
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0 10px;
+}
+
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-left: 1px solid var(--glass-border);
+  border-right: 1px solid var(--glass-border);
+  padding: 0 20px;
+}
+
+.user-badge img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+/*Pagination : dots to track cards styling */
+.pagination-indicators {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 0 10px;
+  border-left: 1px solid var(--glass-border);
+  border-right: 1px solid var(--glass-border);
+  margin: 0 10px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dot.active {
+  background: #fff;
+  width: 18px; /* The "pill" effect when active */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Hover effect to show interactivity */
+.dot:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(1.2);
+}
+
+/* Ensure the control bar grows with the number of dots */
+.carousel-controls {
+  min-width: fit-content;
+  max-width: 90vw;
+}
+
+/* Responsive Design */
+
+/* Desktop / Large Screens (Spread them out to 90% of screen) */
+@media (min-width: 1200px) {
+  :root {
+    --shift-x: 32vw;
+  }
+}
+/* Tablets */
+@media (max-width: 1024px) {
+  :root {
+    --shift-x: 35vw;
+  }
+}
+/* Mobile (Keep cards closer so they don't fall off screen) */
+@media (max-width: 600px) {
+  :root {
+    --shift-x: 38vw;
+  }
+
+  .carousel-card {
+    width: 75vw; /* Almost full width on mobile */
+    height: 450px;
+  }
+
+  .carousel-card.left {
+    transform: translate3d(-45%, 0, -250px) rotateY(45deg) scale(0.8);
+  }
+
+  .carousel-card.right {
+    transform: translate3d(45%, 0, -250px) rotateY(-45deg) scale(0.8);
+  }
+  .pagination-indicators {
+    gap: 5px;
+  }
+  .dot {
+    width: 4px;
+    height: 4px;
+  }
+  .dot.active {
+    width: 12px;
+  }
+}
+
+/* Bottom Controls */
+.carousel-controls {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 16px;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 15px;
+}
